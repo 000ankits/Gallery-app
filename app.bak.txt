@@ -1,0 +1,169 @@
+const express = require('express'),
+	mongoose = require('mongoose'),
+	bodyparser = require('body-parser'),
+	passport = require('passport'),
+	localStrategy = require('passport-local'),
+	localMongoose = require('passport-local-mongoose'),
+	session = require('express-session'),
+	user = require('./models/user'),
+	image = require('./models/image'),
+	methodOverride = require('method-override'),
+	app = express();
+
+mongoose.connect('mongodb://localhost/image_gallery');
+app.set('view engine', 'ejs');
+
+app.use(session({ secret: 'Password Encryption', resave: false, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(bodyparser.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
+passport.use(new localStrategy(user.authenticate()));
+passport.serializeUser(user.serializeUser());
+passport.deserializeUser(user.deserializeUser());
+
+// ===========================
+// RESTful Routes
+// ===========================
+app.get('/', (req, res) => {
+	res.redirect('/gallery');
+});
+
+app.get('/user/:id', isLoggedIn, (req, res) => {
+	user.findById(req.params.id, (err, foundUser) => {
+		if (err) {
+			console.log(err);
+			return res.redirect('/login');
+		}
+		res.render('userGallery', { user: foundUser });
+	});
+});
+
+// Index
+app.get('/gallery', (req, res) => {
+	image.find((err, foundImage) => {
+		if (err) {
+			console.log('err');
+		} else {
+			res.render('gallery', { image: foundImage });
+		}
+	});
+});
+
+// New
+app.get('/gallery/new', isLoggedIn, (req, res) => {
+	res.render('new');
+});
+
+// Create
+app.post('/gallery', isLoggedIn, (req, res) => {
+	image.create({ url: req.body.url, desc: req.body.desc }, (err, newImage) => {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log(newImage.desc + ' Created');
+			res.redirect('/gallery');
+		}
+	});
+});
+
+// Show
+app.get('/gallery/:id', (req, res) => {
+	image.findById(req.params.id, (err, foundImage) => {
+		if (err) {
+			console.log(err);
+		} else {
+			res.render('showImage', { image: foundImage });
+		}
+	});
+});
+
+// Edit
+app.get('/gallery/:id/edit', isLoggedIn, (req, res) => {
+	image.findById(req.params.id, (err, foundImage) => {
+		if (err) {
+			console.log(err);
+		} else {
+			res.render('editImage', { image: foundImage });
+		}
+	});
+});
+
+// Update
+app.put('/gallery/:id', isLoggedIn, (req, res) => {
+	image.findByIdAndUpdate(req.params.id, { url: req.body.url, desc: req.body.desc }, (err, foundImage) => {
+		if (err) {
+			console.log(err);
+		} else {
+			res.redirect('/gallery/' + req.params.id);
+		}
+	});
+});
+
+// Destroy
+app.delete('/gallery/:id', isLoggedIn, (req, res) => {
+	image.findByIdAndRemove(req.params.id, (err) => {
+		if (err) {
+			console.log(err);
+			res.redirect('/gallery');
+		} else {
+			res.redirect('/gallery');
+		}
+	});
+});
+
+// ===================
+// Auth Routes
+// ===================
+
+// Register
+app.get('/register', (req, res) => {
+	res.render('register');
+});
+
+app.post('/register', (req, res) => {
+	user.register(new user({ username: req.body.username }), req.body.password, (err, newUser) => {
+		if (err) {
+			console.log(err);
+			res.redirect('/register');
+		}
+		passport.authenticate('local')(req, res, () => {
+			res.redirect('/gallery');
+		});
+	});
+});
+
+// login
+app.get('/login', (req, res) => {
+	res.render('login');
+});
+
+app.post(
+	'/login',
+	passport.authenticate('local', {
+		successRedirect : '/gallery',
+		failureRedirect : '/login'
+	}),
+	(req, res) => {}
+);
+
+// LogOut
+app.get('/logout', (req, res) => {
+	req.logOut();
+	res.redirect('/');
+});
+
+// ===================
+// MiddleWare
+// ===================
+function isLoggedIn(req, res, next) {
+	if (req.isAuthenticated()) {
+		return next();
+	}
+	res.redirect('/login');
+}
+
+app.listen('8888', () => {
+	console.log('Server started...');
+});

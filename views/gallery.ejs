@@ -1,0 +1,17 @@
+<% include ./partials/header %>
+
+    <div class="jumbotron" style="height: 12rem;">
+        <h1>Gallery Page!</h1>       
+        <a href="/gallery/new"><button class="btn btn-primary"> Add Picture </button></a>
+    </div>
+
+    <div class="row">
+        <% image.forEach((image)=>{ %>
+            <div class="col-sm-4 col-md-3 mb-3">
+                <a href="/gallery/<%= img._id %>"><img id="thumbnail" class="img-thumbnail" src="<%= img.url %>" alt="Image"></a>
+            </div>
+        <% }); %>
+    </div>
+ 
+    
+<% include ./partials/footer %>

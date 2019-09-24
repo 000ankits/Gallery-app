@@ -1,0 +1,21 @@
+<% include ./partials/header %>
+
+<form action="/gallery" method="POST">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Image URL</label>
+        <input class="form-control" type="text" name="url" placeholder="url">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Image Description</label>
+        <input class="form-control" type="text" name="desc" placeholder="desc">
+
+        <label for="exampleFormControlSelect1">Display Mode</label>
+        <select class="form-control" name="display" id="exampleFormControlSelect1">
+            <option value="private" selected>private</option>
+            <option value="public">public</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+    
+<% include ./partials/footer %>
