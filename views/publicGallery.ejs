@@ -6,7 +6,7 @@
 
 <div class="row">
         <% images.forEach((img)=>{ %>
-            <% if(img.display === "public"){ %>
+            <% if(img.privacy === "public"){ %>
                 <div class="col-sm-4 col-md-3 mb-2">
                     <a href="/gallery/<%= img._id %>"><img id="thumbnail" class="img-thumbnail" src="<%= img.url %>" alt="Image"></a>
                 </div>

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const image = require('./image');
+const user = require('./comment');
 const localMongoose = require('passport-local-mongoose');
 
 const userSchema = new mongoose.Schema({

@@ -1,12 +1,21 @@
 <% include ./partials/header %>
 
 <div id = "showThumbnail" class="thumbnail">
-    <img class="img-fluid max-width: 100%;" src="<%= image.url %>" alt="Image">
+    <img class="img-fluid" src="<%= image.url %>" alt="Image">
     <!-- <hr> -->
     <p><%= image.desc %></p>
 </div>
 <hr>
+<% if(image.comments){ %>
+    <% comment.forEach((comment)=>{ %>
+        <% if(comment.image.equals(image._id)){ %>
+            <li><%= comment.text %> <br> <em>by <%= comment.author %></em></li>
+            <hr>
+        <% } %>
+    <% }) %>    
+<% } %>
 <a class="btn btn-sm btn-info" href="/gallery/"> Back </a>
+<a class="btn btn-sm btn-success" href="/gallery/<%= image._id %>/comment/new"> Add Comment </a>
 <% if(currentUser){ %>
     <% if(image.owner.equals(currentUser._id)){ %>
         <a class="btn btn-sm btn-primary" href="/gallery/<%= image._id %>/edit"> Edit </a>

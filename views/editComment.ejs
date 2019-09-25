@@ -1,0 +1,12 @@
+<% include ./partials/header %>
+
+<form action="/gallery/:imageId/comment/:commentId?_method=PUT" method="POST">
+    <div class="form-group">
+        <label for="exampleInputEmail1">Edit Comment</label>
+        <input class="form-control" type="text" name="text" value="<%= comment.text %>">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+    
+<% include ./partials/footer %>
