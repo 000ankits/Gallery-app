@@ -11,7 +11,12 @@ const express = require('express'),
 	app = express();
 
 // mongoose.connect('mongodb://localhost/image_gallery');
-mongoose.connect(process.env.DBURL);
+mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect('mongodb+srv://ankits:ankits123@ankits-yxpsb.mongodb.net/test?retryWrites=true&w=majority', {
+// 	useNewUrlParser: true,
+// 	useUnifiedTopology: true
+// });
+
 app.set('view engine', 'ejs');
 
 app.use(session({ secret: 'Password Encryption', resave: false, saveUninitialized: false }));
@@ -28,6 +33,8 @@ app.use((req, res, next) => {
 passport.use(new localStrategy(user.authenticate()));
 passport.serializeUser(user.serializeUser());
 passport.deserializeUser(user.deserializeUser());
+
+var port = process.env.PORT || 8888;
 
 // ===========================
 // Gallery Routes
@@ -253,6 +260,6 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/login');
 }
 
-app.listen(process.env.PORT, () => {
+app.listen(port, () => {
 	console.log('Server started...');
 });
