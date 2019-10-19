@@ -13,7 +13,7 @@ const express = require('express'),
 
 dotEnv.config({ path: './.env' });
 
-// console.log('ENV: ', process.env.DBURL);
+console.log('ENV: ', process.env.DBURL);
 // mongoose.connect('mongodb://localhost/image_gallery');
 mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.connect('mongodb+srv://ankits:ankits123@ankits-yxpsb.mongodb.net/test?retryWrites=true&w=majority');
