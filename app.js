@@ -3,16 +3,15 @@ const express = require('express'),
 	bodyparser = require('body-parser'),
 	passport = require('passport'),
 	localStrategy = require('passport-local'),
-	localMongoose = require('passport-local-mongoose'),
 	session = require('express-session'),
 	user = require('./models/user'),
 	image = require('./models/image'),
 	comment = require('./models/comment'),
 	methodOverride = require('method-override'),
-	ObjectId = mongoose.Types.ObjectId,
 	app = express();
 
-mongoose.connect('mongodb://localhost/image_gallery');
+// mongoose.connect('mongodb://localhost/image_gallery');
+mongoose.connect('mongodb+srv://ankits:ankits123@ankits-yxpsb.mongodb.net/test?retryWrites=true&w=majority');
 app.set('view engine', 'ejs');
 
 app.use(session({ secret: 'Password Encryption', resave: false, saveUninitialized: false }));
@@ -29,10 +28,6 @@ app.use((req, res, next) => {
 passport.use(new localStrategy(user.authenticate()));
 passport.serializeUser(user.serializeUser());
 passport.deserializeUser(user.deserializeUser());
-
-// ===========================
-// RESTful Routes
-// ===========================
 
 // ===========================
 // Gallery Routes
@@ -220,7 +215,6 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
 	user.register(new user({ username: req.body.username }), req.body.password, (err, newUser) => {
 		if (err) {
-			res.send(err);
 			res.redirect('/register');
 		}
 		passport.authenticate('local')(req, res, () => {
