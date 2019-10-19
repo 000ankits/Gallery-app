@@ -253,6 +253,6 @@ function isLoggedIn(req, res, next) {
 	res.redirect('/login');
 }
 
-app.listen('8888', () => {
+app.listen(process.env.PORT, () => {
 	console.log('Server started...');
 });
