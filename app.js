@@ -55,7 +55,7 @@ app.get('/gallery', isLoggedIn, (req, res) => {
 	image.find({}, (err, foundImage) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		}
 		res.render('userGallery', { images: foundImage });
 	});
@@ -71,7 +71,7 @@ app.post('/gallery', isLoggedIn, (req, res) => {
 	image.create({ url: req.body.url, desc: req.body.desc, privacy: req.body.privacy }, (err, newImage) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			newImage.owner = req.user._id;
 			newImage.save();
@@ -85,17 +85,17 @@ app.get('/gallery/:id', (req, res) => {
 	image.findById(req.params.id, (err, foundImage) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			comment.find({}, (err, foundcomments) => {
 				if (err) {
 					console.log(err);
-					return res.send(res.statusCode);
+					res.send(res.statusCode);
 				} else {
 					user.findById(foundImage.owner, (err, foundOwner) => {
 						if (err) {
 							console.log(err);
-							return res.send(res.statusCode);
+							res.send(res.statusCode);
 						} else {
 							res.render('showImage', { image: foundImage, comment: foundcomments, owner: foundOwner });
 						}
@@ -111,7 +111,7 @@ app.get('/gallery/:id/edit', isLoggedIn, (req, res) => {
 	image.findById(req.params.id, (err, foundImage) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			res.render('editImage', { image: foundImage });
 		}
@@ -123,7 +123,7 @@ app.put('/gallery/:id', isLoggedIn, (req, res) => {
 	image.findByIdAndUpdate(req.params.id, { url: req.body.url, desc: req.body.desc }, (err, foundImage) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			res.redirect('/gallery/' + req.params.id);
 		}
@@ -151,7 +151,7 @@ app.get('/gallery/:imageId/comment', isLoggedIn, (req, res) => {
 	image.findById(req.params.imageId, (err, foundImage) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			res.redirect('/gallery/' + foundImage._id);
 		}
@@ -163,7 +163,7 @@ app.get('/gallery/:imageId/comment/new', isLoggedIn, (req, res) => {
 	image.findById(req.params.imageId, (err, foundImage) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			res.render('newComment', { image: foundImage });
 		}
@@ -175,14 +175,14 @@ app.post('/gallery/:imageId/comment', isLoggedIn, (req, res) => {
 	image.findById(req.params.imageId, (err, foundImage) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			comment.create(
 				{ text: req.body.text, author: req.user.username, image: foundImage._id, owner: req.user._id },
 				(err, newComment) => {
 					if (err) {
 						console.log(err);
-						return res.send(res.statusCode);
+						res.send(res.statusCode);
 					} else {
 						foundImage.comments.push(newComment._id);
 						newComment.save();
@@ -200,7 +200,7 @@ app.get('/gallery/:imageId/comment/:commentId/edit', isLoggedIn, (req, res) => {
 	comment.findById(req.params.commentId, (err, foundComment) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			res.render('editComment', { comment: foundComment });
 		}
@@ -212,7 +212,7 @@ app.put('/gallery/:imageId/comment/:commentId', isLoggedIn, (req, res) => {
 	comment.findByIdAndUpdate(req.params.commentId, { text: req.body.text }, (err, foundComment) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			res.redirect('/gallery/' + req.params.imageId);
 		}
@@ -224,7 +224,7 @@ app.delete('/gallery/:imaged/comment/:commentId', isLoggedIn, (req, res) => {
 	comment.findByIdAndRemove(req.params.commentId, (err) => {
 		if (err) {
 			console.log(err);
-			return res.send(res.statusCode);
+			res.send(res.statusCode);
 		} else {
 			res.redirect('/gallery/' + req.params.imageId);
 		}
