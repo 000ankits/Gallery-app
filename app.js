@@ -24,7 +24,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
-app.use('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
 app.use((req, res, next) => {
 	res.locals.currentUser = req.user;
