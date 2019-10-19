@@ -253,15 +253,15 @@ app.post('/register', (req, res) => {
 });
 
 // login
-app.get('/login', (req, res) => {
+app.get('/Login', (req, res) => {
 	res.render('login');
 });
 
 app.post(
-	'/login',
+	'/Login',
 	passport.authenticate('local', {
 		successRedirect : '/gallery',
-		failureRedirect : '/login'
+		failureRedirect : '/Login'
 	}),
 	(req, res) => {}
 );
@@ -279,7 +279,7 @@ function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
 	}
-	res.redirect('/login');
+	res.redirect('/Login');
 }
 
 app.listen(port, () => {
