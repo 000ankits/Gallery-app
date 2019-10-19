@@ -11,7 +11,7 @@ const express = require('express'),
 	app = express();
 
 // mongoose.connect('mongodb://localhost/image_gallery');
-mongoose.connect('process.env.DBURL');
+mongoose.connect(process.env.DBURL);
 app.set('view engine', 'ejs');
 
 app.use(session({ secret: 'Password Encryption', resave: false, saveUninitialized: false }));
