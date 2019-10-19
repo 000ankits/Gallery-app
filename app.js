@@ -8,17 +8,17 @@ const express = require('express'),
 	image = require('./models/image'),
 	comment = require('./models/comment'),
 	methodOverride = require('method-override'),
+	dotEnv = require('dotenv'),
 	app = express();
 
+dotEnv.config({ path: './.env' });
+
+// console.log('ENV: ', process.env.DBURL);
 // mongoose.connect('mongodb://localhost/image_gallery');
 mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true });
-// mongoose.connect('mongodb+srv://ankits:ankits123@ankits-yxpsb.mongodb.net/test?retryWrites=true&w=majority', {
-// 	useNewUrlParser: true,
-// 	useUnifiedTopology: true
-// });
+// mongoose.connect('mongodb+srv://ankits:ankits123@ankits-yxpsb.mongodb.net/test?retryWrites=true&w=majority');
 
 app.set('view engine', 'ejs');
-
 app.use(session({ secret: 'Password Encryption', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
