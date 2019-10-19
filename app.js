@@ -43,7 +43,8 @@ var port = process.env.PORT || 8888;
 app.get('/', (req, res) => {
 	image.find({}, (err, foundImage) => {
 		if (err) {
-			return res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		}
 		res.render('publicGallery', { images: foundImage });
 	});
@@ -53,7 +54,8 @@ app.get('/', (req, res) => {
 app.get('/gallery', isLoggedIn, (req, res) => {
 	image.find({}, (err, foundImage) => {
 		if (err) {
-			return res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		}
 		res.render('userGallery', { images: foundImage });
 	});
@@ -68,7 +70,8 @@ app.get('/gallery/new', isLoggedIn, (req, res) => {
 app.post('/gallery', isLoggedIn, (req, res) => {
 	image.create({ url: req.body.url, desc: req.body.desc, privacy: req.body.privacy }, (err, newImage) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			newImage.owner = req.user._id;
 			newImage.save();
@@ -81,13 +84,22 @@ app.post('/gallery', isLoggedIn, (req, res) => {
 app.get('/gallery/:id', (req, res) => {
 	image.findById(req.params.id, (err, foundImage) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			comment.find({}, (err, foundcomments) => {
 				if (err) {
-					res.send(err);
+					console.log(err);
+					return res.send(res.statusCode);
 				} else {
-					res.render('showImage', { image: foundImage, comment: foundcomments });
+					user.findById(foundImage.owner, (err, foundOwner) => {
+						if (err) {
+							console.log(err);
+							return res.send(res.statusCode);
+						} else {
+							res.render('showImage', { image: foundImage, comment: foundcomments, owner: foundOwner });
+						}
+					});
 				}
 			});
 		}
@@ -98,7 +110,8 @@ app.get('/gallery/:id', (req, res) => {
 app.get('/gallery/:id/edit', isLoggedIn, (req, res) => {
 	image.findById(req.params.id, (err, foundImage) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			res.render('editImage', { image: foundImage });
 		}
@@ -109,7 +122,8 @@ app.get('/gallery/:id/edit', isLoggedIn, (req, res) => {
 app.put('/gallery/:id', isLoggedIn, (req, res) => {
 	image.findByIdAndUpdate(req.params.id, { url: req.body.url, desc: req.body.desc }, (err, foundImage) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			res.redirect('/gallery/' + req.params.id);
 		}
@@ -120,7 +134,7 @@ app.put('/gallery/:id', isLoggedIn, (req, res) => {
 app.delete('/gallery/:id', isLoggedIn, (req, res) => {
 	image.findByIdAndRemove(req.params.id, (err) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
 			res.redirect('/gallery');
 		} else {
 			res.redirect('/gallery');
@@ -136,7 +150,8 @@ app.delete('/gallery/:id', isLoggedIn, (req, res) => {
 app.get('/gallery/:imageId/comment', isLoggedIn, (req, res) => {
 	image.findById(req.params.imageId, (err, foundImage) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			res.redirect('/gallery/' + foundImage._id);
 		}
@@ -147,7 +162,8 @@ app.get('/gallery/:imageId/comment', isLoggedIn, (req, res) => {
 app.get('/gallery/:imageId/comment/new', isLoggedIn, (req, res) => {
 	image.findById(req.params.imageId, (err, foundImage) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			res.render('newComment', { image: foundImage });
 		}
@@ -158,13 +174,15 @@ app.get('/gallery/:imageId/comment/new', isLoggedIn, (req, res) => {
 app.post('/gallery/:imageId/comment', isLoggedIn, (req, res) => {
 	image.findById(req.params.imageId, (err, foundImage) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			comment.create(
 				{ text: req.body.text, author: req.user.username, image: foundImage._id, owner: req.user._id },
 				(err, newComment) => {
 					if (err) {
-						res.send(err);
+						console.log(err);
+						return res.send(res.statusCode);
 					} else {
 						foundImage.comments.push(newComment._id);
 						newComment.save();
@@ -181,7 +199,8 @@ app.post('/gallery/:imageId/comment', isLoggedIn, (req, res) => {
 app.get('/gallery/:imageId/comment/:commentId/edit', isLoggedIn, (req, res) => {
 	comment.findById(req.params.commentId, (err, foundComment) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			res.render('editComment', { comment: foundComment });
 		}
@@ -192,7 +211,8 @@ app.get('/gallery/:imageId/comment/:commentId/edit', isLoggedIn, (req, res) => {
 app.put('/gallery/:imageId/comment/:commentId', isLoggedIn, (req, res) => {
 	comment.findByIdAndUpdate(req.params.commentId, { text: req.body.text }, (err, foundComment) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			res.redirect('/gallery/' + req.params.imageId);
 		}
@@ -203,7 +223,8 @@ app.put('/gallery/:imageId/comment/:commentId', isLoggedIn, (req, res) => {
 app.delete('/gallery/:imaged/comment/:commentId', isLoggedIn, (req, res) => {
 	comment.findByIdAndRemove(req.params.commentId, (err) => {
 		if (err) {
-			res.send(err);
+			console.log(err);
+			return res.send(res.statusCode);
 		} else {
 			res.redirect('/gallery/' + req.params.imageId);
 		}
@@ -222,6 +243,7 @@ app.get('/register', (req, res) => {
 app.post('/register', (req, res) => {
 	user.register(new user({ username: req.body.username }), req.body.password, (err, newUser) => {
 		if (err) {
+			console.log(err);
 			res.redirect('/register');
 		}
 		passport.authenticate('local')(req, res, () => {
