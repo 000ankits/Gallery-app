@@ -13,10 +13,7 @@ const express = require('express'),
 
 dotEnv.config({ path: './.env' });
 
-console.log('ENV: ', process.env.DBURL);
-// mongoose.connect('mongodb://localhost/image_gallery');
 mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true });
-// mongoose.connect('mongodb+srv://ankits:ankits123@ankits-yxpsb.mongodb.net/test?retryWrites=true&w=majority');
 
 app.set('view engine', 'ejs');
 app.use(session({ secret: 'Password Encryption', resave: false, saveUninitialized: false }));
