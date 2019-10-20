@@ -15,7 +15,7 @@
         <% } %>
     <% }) %>    
 <% } %>
-<a class="btn btn-sm btn-info" href="/gallery/"> Back </a>
+<a class="btn btn-sm btn-info" href="javascript:history.back()"> Back </a>
 <a class="btn btn-sm btn-success" href="/gallery/<%= image._id %>/comment/new"> Add Comment </a>
 <% if(currentUser){ %>
     <% if(image.owner.equals(currentUser._id)){ %>
