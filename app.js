@@ -251,7 +251,7 @@ app.post('/register', (req, res) => {
 
 // login
 app.get('/login', (req, res) => {
-	res.render('login');
+	res.render('loginPage');
 });
 
 app.post(
