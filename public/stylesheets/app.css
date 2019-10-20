@@ -16,14 +16,6 @@ body {
 	margin: 0 auto;
 }
 
-nav {
-	height: 3rem;
-}
-
-p.nav-link {
-	padding-top: 1.6rem;
-}
-
 .jumbotron {
 	height: 8rem;
 }
