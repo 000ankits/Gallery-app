@@ -142,7 +142,7 @@ app.get('/gallery/:id/edit', isLoggedIn, (req, res) => {
 // Update
 app.put('/gallery/:id', isLoggedIn, (req, res) => {
 	console.log('/gallery/:id PUT loading');
-	image.findByIdAndUpdate(req.params.id, { url: req.body.url, desc: req.body.desc }, (err, foundImage) => {
+	image.findByIdAndUpdate(req.params.id, { desc: req.body.desc, privacy: req.body.privacy }, (err, foundImage) => {
 		if (err) {
 			console.log(err);
 			res.send(res.statusCode);

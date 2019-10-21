@@ -9,6 +9,12 @@
         <div class="form-group">
             <label for="exampleInputPassword1">Image Description</label>
             <input class="form-control" type="text" name="desc" value="<%= image.desc %>">
+
+            <label for="exampleFormControlSelect1">Privacy Mode</label>
+            <select class="form-control" name="privacy" id="exampleFormControlSelect1">
+                <option value="private" selected>private</option>
+                <option value="public">public</option>
+            </select>
         </div>
         <a class="btn btn-info" href="javascript:history.back()"> Back </a>
         <button type="submit" class="btn btn-primary">Submit</button>
