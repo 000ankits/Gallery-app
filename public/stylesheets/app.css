@@ -7,10 +7,18 @@ body {
 	display: inline;
 }
 
+/* #divColumn {
+	margin-right: 2rem !important;
+} */
+
+/* img #thumbnail .img-thumbnail {
+	margin-right: 2rem !important;
+} */
+
 #thumbnail {
 	padding: 0;
-	max-width: 300px !important;
-	max-height: 200px !important;
+	/* max-width: 20rem !important;
+	max-height: 18rem !important; */
 }
 
 #showThumbnail {

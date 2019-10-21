@@ -36,6 +36,8 @@ const port = process.env.PORT || 8888;
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+var message = '';
+
 // ===========================
 // Gallery Routes
 // ===========================
