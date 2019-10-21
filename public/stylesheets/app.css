@@ -9,13 +9,25 @@ body {
 
 #thumbnail {
 	padding: 0;
+	max-width: 300px !important;
+	max-height: 200px !important;
 }
 
 #showThumbnail {
-	width: 30rem;
-	margin: 0 auto;
+	max-width: 30rem !important;
+	max-height: 30rem !important;
+	margin: 20px auto;
+}
+
+.img-fluid {
+	max-width: 30rem !important;
+	max-height: 25rem !important;
 }
 
 .jumbotron {
 	height: 8rem;
+}
+
+nav {
+	max-height: 3rem !important;
 }
