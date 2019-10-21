@@ -1,7 +1,7 @@
 <% include ./partials/header %>
 
 <div id = "showThumbnail" class="thumbnail">
-    <img class="img-fluid" src="<%= image.url %>" alt="Image">
+    <img class="img-fluid" src="/hidden/<%= image._id %>" alt="Image">
     <p class="text-right">Uploaded by <%= owner.username%></p>
     <!-- <hr> -->
     <p><%= image.desc %></p>

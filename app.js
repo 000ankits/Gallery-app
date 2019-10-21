@@ -9,6 +9,7 @@ const express = require('express'),
 	comment = require('./models/comment'),
 	methodOverride = require('method-override'),
 	dotEnv = require('dotenv'),
+	multer = require('multer'),
 	app = express();
 
 dotEnv.config({ path: './.env' });
@@ -31,13 +32,16 @@ passport.use(new localStrategy(user.authenticate()));
 passport.serializeUser(user.serializeUser());
 passport.deserializeUser(user.deserializeUser());
 
-var port = process.env.PORT || 8888;
+const port = process.env.PORT || 8888;
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 // ===========================
 // Gallery Routes
 // ===========================
 
 app.get('/', (req, res) => {
+	console.log('/ loading');
 	image.find({}, (err, foundImage) => {
 		if (err) {
 			console.log(err);
@@ -49,6 +53,7 @@ app.get('/', (req, res) => {
 
 // Index
 app.get('/gallery', isLoggedIn, (req, res) => {
+	console.log('/gallery loading');
 	image.find({}, (err, foundImage) => {
 		if (err) {
 			console.log(err);
@@ -60,25 +65,43 @@ app.get('/gallery', isLoggedIn, (req, res) => {
 
 // New
 app.get('/gallery/new', isLoggedIn, (req, res) => {
+	console.log('/gallery/new loading');
 	res.render('new');
 });
 
 // Create
-app.post('/gallery', isLoggedIn, (req, res) => {
-	image.create({ url: req.body.url, desc: req.body.desc, privacy: req.body.privacy }, (err, newImage) => {
-		if (err) {
-			console.log(err);
-			res.send(res.statusCode);
-		} else {
-			newImage.owner = req.user._id;
-			newImage.save();
-			res.redirect('/gallery');
-		}
-	});
+app.post('/gallery', isLoggedIn, upload.single('myFile'), (req, res) => {
+	console.log('/gallery post loading');
+	if (!req.file) {
+		res.send('No Files Found!');
+	} else if (
+		req.file.mimetype === 'image/jpeg' ||
+		req.file.mimetype === 'image/jpg' ||
+		req.file.mimetype === 'image/png'
+	) {
+		console.log('Image Uploading to DB...');
+		image.create(
+			{ data: req.file.buffer, type: req.file.mimetype, desc: req.body.desc, privacy: req.body.privacy },
+			(err, newImage) => {
+				if (err) {
+					console.log(err);
+					res.send(res.statusCode);
+				} else {
+					newImage.owner = req.user._id;
+					newImage.save();
+					res.redirect('/gallery');
+				}
+			}
+		);
+	} else {
+		console.log(req.file.mimetype);
+		res.send('Only JPEG or PNG files Supported');
+	}
 });
 
 // Show
 app.get('/gallery/:id', (req, res) => {
+	console.log('/gallery/:id loading');
 	image.findById(req.params.id, (err, foundImage) => {
 		if (err) {
 			console.log(err);
@@ -105,6 +128,7 @@ app.get('/gallery/:id', (req, res) => {
 
 // Edit
 app.get('/gallery/:id/edit', isLoggedIn, (req, res) => {
+	console.log('/gallery/:id/edit loading');
 	image.findById(req.params.id, (err, foundImage) => {
 		if (err) {
 			console.log(err);
@@ -117,6 +141,7 @@ app.get('/gallery/:id/edit', isLoggedIn, (req, res) => {
 
 // Update
 app.put('/gallery/:id', isLoggedIn, (req, res) => {
+	console.log('/gallery/:id PUT loading');
 	image.findByIdAndUpdate(req.params.id, { url: req.body.url, desc: req.body.desc }, (err, foundImage) => {
 		if (err) {
 			console.log(err);
@@ -129,6 +154,7 @@ app.put('/gallery/:id', isLoggedIn, (req, res) => {
 
 // Destroy
 app.delete('/gallery/:id', isLoggedIn, (req, res) => {
+	console.log('/gallery/:id elete loading');
 	image.findByIdAndRemove(req.params.id, (err) => {
 		if (err) {
 			console.log(err);
@@ -136,6 +162,21 @@ app.delete('/gallery/:id', isLoggedIn, (req, res) => {
 		} else {
 			res.redirect('/gallery');
 		}
+	});
+});
+
+// ===========================
+// hidden image route
+// ===========================
+app.get('/hidden/:imgId', (req, res) => {
+	console.log('/hidden loading');
+	image.findById(req.params.imgId, (err, foundImage) => {
+		if (err) {
+			console.log(err);
+			res.send(res.statusCode);
+		}
+		res.contentType(foundImage.type);
+		res.send(foundImage.data);
 	});
 });
 

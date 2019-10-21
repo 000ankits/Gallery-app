@@ -3,9 +3,9 @@ const user = require('./user');
 const comment = require('./comment');
 
 const imageSchema = new mongoose.Schema({
-	url      : String,
+	data     : Buffer,
+	type     : String,
 	desc     : String,
-	likes    : Number,
 	privacy  : {
 		type : String,
 		enum : [ 'public', 'private' ]

@@ -1,9 +1,9 @@
 <% include ./partials/header %>
 
-<form action="/gallery" method="POST">
+<form action="/gallery" method="POST" enctype="multipart/form-data">
     <div class="form-group">
-        <label for="exampleInputEmail1">Image URL</label>
-        <input class="form-control" type="text" name="url" placeholder="url">
+        <label for="exampleFormControlFile1">Example file input</label>
+        <input type="file" name="myFile" class="form-control-file" id="exampleFormControlFile1">
     </div>
     <div class="form-group">
         <label for="exampleInputPassword1">Image Description</label>
