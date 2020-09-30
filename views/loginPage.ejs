@@ -1,18 +1,18 @@
 <% include ./partials/header %>
 
-<h1>Login Page</h1>
+<div class="form-group1">
 
-<form action="/login" method="POST">
-    <div class="form-group">
-        <label for="exampleInputEmail1">Username</label>
-        <input class="form-control" type="text" name="username" placeholder="username"">
-    </div>
-    <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input class="form-control" type="password" name="password" placeholder="password">
-    </div>
-    <a class="btn btn-info" href="javascript:history.back()"> Back </a>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <h1 class="log_h1">Log into Gallary App </h1>
 
+    <form action="/login" method="POST">
+        <div class="form-group">
+
+            <input class="form-control" type="text" name="username" placeholder="Username or Mobile"">
+        <br>
+        <input class=" form-control" type="password" name="password" placeholder="Password">
+        </div>
+        <a class="btn btn-info" href="javascript:history.back()"> Back </a>
+        <button type="submit" class="btn btn-primary">Log in</button>
+    </form>
+</div>
 <% include ./partials/footer %>
