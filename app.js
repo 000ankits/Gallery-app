@@ -12,15 +12,30 @@ const express = require('express'),
 	multer = require('multer'),
 	app = express();
 
-dotEnv.config({ path: './.env' });
+dotEnv.config({
+	path: './.env'
+});
 
-mongoose.connect(process.env.DBURL, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.DBURL, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+});
 
 app.set('view engine', 'ejs');
-app.use(session({ secret: 'Password Encryption', resave: false, saveUninitialized: false }));
+app.use(
+	session({
+		secret: 'Password Encryption',
+		resave: false,
+		saveUninitialized: false
+	})
+);
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(bodyparser.urlencoded({ extended: true }));
+app.use(
+	bodyparser.urlencoded({
+		extended: true
+	})
+);
 app.use(methodOverride('_method'));
 app.use(express.static(__dirname + '/public'));
 app.use((req, res, next) => {
@@ -34,44 +49,50 @@ passport.deserializeUser(user.deserializeUser());
 
 const port = process.env.PORT || 8888;
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({
+	storage: storage
+});
 
 // ===========================
 // Gallery Routes
 // ===========================
 
 app.get('/', (req, res) => {
-	console.log('/ loading');
+	// console.log('/ loading');
 	image.find({}, (err, foundImage) => {
 		if (err) {
 			console.log(err);
 			return res.send(res.statusCode);
 		}
-		res.render('publicGallery', { images: foundImage });
+		res.render('publicGallery', {
+			images: foundImage
+		});
 	});
 });
 
 // Index
 app.get('/gallery', isLoggedIn, (req, res) => {
-	console.log('/gallery loading');
+	// console.log('/gallery loading');
 	image.find({}, (err, foundImage) => {
 		if (err) {
 			console.log(err);
 			res.send(res.statusCode);
 		}
-		res.render('userGallery', { images: foundImage });
+		res.render('userGallery', {
+			images: foundImage
+		});
 	});
 });
 
 // New
 app.get('/gallery/new', isLoggedIn, (req, res) => {
-	console.log('/gallery/new loading');
+	// console.log('/gallery/new loading');
 	res.render('new');
 });
 
 // Create
 app.post('/gallery', isLoggedIn, upload.single('myFile'), (req, res) => {
-	console.log('/gallery post loading');
+	// console.log('/gallery post loading');
 	if (!req.file) {
 		res.send('No Files Found!');
 	} else if (
@@ -79,9 +100,14 @@ app.post('/gallery', isLoggedIn, upload.single('myFile'), (req, res) => {
 		req.file.mimetype === 'image/jpg' ||
 		req.file.mimetype === 'image/png'
 	) {
-		console.log('Image Uploading to DB...');
+		// console.log('Image Uploading to DB...');
 		image.create(
-			{ data: req.file.buffer, type: req.file.mimetype, desc: req.body.desc, privacy: req.body.privacy },
+			{
+				data: req.file.buffer,
+				type: req.file.mimetype,
+				desc: req.body.desc,
+				privacy: req.body.privacy
+			},
 			(err, newImage) => {
 				if (err) {
 					console.log(err);
@@ -101,7 +127,7 @@ app.post('/gallery', isLoggedIn, upload.single('myFile'), (req, res) => {
 
 // Show
 app.get('/gallery/:id', (req, res) => {
-	console.log('/gallery/:id loading');
+	// console.log('/gallery/:id loading');
 	image.findById(req.params.id, (err, foundImage) => {
 		if (err) {
 			console.log(err);
@@ -117,7 +143,11 @@ app.get('/gallery/:id', (req, res) => {
 							console.log(err);
 							res.send(res.statusCode);
 						} else {
-							res.render('showImage', { image: foundImage, comment: foundcomments, owner: foundOwner });
+							res.render('showImage', {
+								image: foundImage,
+								comment: foundcomments,
+								owner: foundOwner
+							});
 						}
 					});
 				}
@@ -128,34 +158,43 @@ app.get('/gallery/:id', (req, res) => {
 
 // Edit
 app.get('/gallery/:id/edit', isLoggedIn, (req, res) => {
-	console.log('/gallery/:id/edit loading');
+	// console.log('/gallery/:id/edit loading');
 	image.findById(req.params.id, (err, foundImage) => {
 		if (err) {
 			console.log(err);
 			res.send(res.statusCode);
 		} else {
-			res.render('editImage', { image: foundImage });
+			res.render('editImage', {
+				image: foundImage
+			});
 		}
 	});
 });
 
 // Update
 app.put('/gallery/:id', isLoggedIn, (req, res) => {
-	console.log('/gallery/:id PUT loading');
-	image.findByIdAndUpdate(req.params.id, { desc: req.body.desc, privacy: req.body.privacy }, (err, foundImage) => {
-		if (err) {
-			console.log(err);
-			res.send(res.statusCode);
-		} else {
-			res.redirect('/gallery/' + req.params.id);
+	// console.log('/gallery/:id PUT loading');
+	image.findByIdAndUpdate(
+		req.params.id,
+		{
+			desc: req.body.desc,
+			privacy: req.body.privacy
+		},
+		(err, foundImage) => {
+			if (err) {
+				console.log(err);
+				res.send(res.statusCode);
+			} else {
+				res.redirect('/gallery/' + req.params.id);
+			}
 		}
-	});
+	);
 });
 
 // Destroy
 app.delete('/gallery/:id', isLoggedIn, (req, res) => {
-	console.log('/gallery/:id elete loading');
-	image.findByIdAndRemove(req.params.id, (err) => {
+	// console.log('/gallery/:id delete loading');
+	image.findByIdAndRemove(req.params.id, err => {
 		if (err) {
 			console.log(err);
 			res.redirect('/gallery');
@@ -169,7 +208,7 @@ app.delete('/gallery/:id', isLoggedIn, (req, res) => {
 // hidden image route
 // ===========================
 app.get('/hidden/:imgId', (req, res) => {
-	console.log('/hidden loading');
+	// console.log('/hidden loading');
 	image.findById(req.params.imgId, (err, foundImage) => {
 		if (err) {
 			console.log(err);
@@ -203,7 +242,9 @@ app.get('/gallery/:imageId/comment/new', isLoggedIn, (req, res) => {
 			console.log(err);
 			res.send(res.statusCode);
 		} else {
-			res.render('newComment', { image: foundImage });
+			res.render('newComment', {
+				image: foundImage
+			});
 		}
 	});
 });
@@ -216,7 +257,12 @@ app.post('/gallery/:imageId/comment', isLoggedIn, (req, res) => {
 			res.send(res.statusCode);
 		} else {
 			comment.create(
-				{ text: req.body.text, author: req.user.username, image: foundImage._id, owner: req.user._id },
+				{
+					text: req.body.text,
+					author: req.user.username,
+					image: foundImage._id,
+					owner: req.user._id
+				},
 				(err, newComment) => {
 					if (err) {
 						console.log(err);
@@ -240,26 +286,34 @@ app.get('/gallery/:imageId/comment/:commentId/edit', isLoggedIn, (req, res) => {
 			console.log(err);
 			res.send(res.statusCode);
 		} else {
-			res.render('editComment', { comment: foundComment });
+			res.render('editComment', {
+				comment: foundComment
+			});
 		}
 	});
 });
 
 // Update
 app.put('/gallery/:imageId/comment/:commentId', isLoggedIn, (req, res) => {
-	comment.findByIdAndUpdate(req.params.commentId, { text: req.body.text }, (err, foundComment) => {
-		if (err) {
-			console.log(err);
-			res.send(res.statusCode);
-		} else {
-			res.redirect('/gallery/' + req.params.imageId);
+	comment.findByIdAndUpdate(
+		req.params.commentId,
+		{
+			text: req.body.text
+		},
+		(err, foundComment) => {
+			if (err) {
+				console.log(err);
+				res.send(res.statusCode);
+			} else {
+				res.redirect('/gallery/' + req.params.imageId);
+			}
 		}
-	});
+	);
 });
 
 // Delete
 app.delete('/gallery/:imaged/comment/:commentId', isLoggedIn, (req, res) => {
-	comment.findByIdAndRemove(req.params.commentId, (err) => {
+	comment.findByIdAndRemove(req.params.commentId, err => {
 		if (err) {
 			console.log(err);
 			res.send(res.statusCode);
@@ -279,15 +333,21 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', (req, res) => {
-	user.register(new user({ username: req.body.username }), req.body.password, (err, newUser) => {
-		if (err) {
-			console.log(err);
-			res.redirect('/register');
+	user.register(
+		new user({
+			username: req.body.username
+		}),
+		req.body.password,
+		(err, newUser) => {
+			if (err) {
+				console.log(err);
+				res.redirect('/register');
+			}
+			passport.authenticate('local')(req, res, () => {
+				res.redirect('/gallery');
+			});
 		}
-		passport.authenticate('local')(req, res, () => {
-			res.redirect('/gallery');
-		});
-	});
+	);
 });
 
 // login
@@ -298,8 +358,8 @@ app.get('/login', (req, res) => {
 app.post(
 	'/login',
 	passport.authenticate('local', {
-		successRedirect : '/gallery',
-		failureRedirect : '/login'
+		successRedirect: '/gallery',
+		failureRedirect: '/login'
 	}),
 	(req, res) => {}
 );
@@ -321,5 +381,5 @@ function isLoggedIn(req, res, next) {
 }
 
 app.listen(port, () => {
-	console.log('Server started...');
+	console.log('Server started on port ' + port + '...');
 });
