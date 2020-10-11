@@ -2,10 +2,7 @@ body {
 	padding: 0;
 	margin: 0;
 	background-color: greenyellow;
-<<<<<<< HEAD
-=======
 	background-image: url('https://wallpapermemory.com/uploads/513/wood-background-hd-1680x1050-345942.jpg');
->>>>>>> aeefa84e421be2b1b57ef08cecbbd5b1d523ecb4
 }
 
 .navbar {
@@ -36,17 +33,13 @@ body {
 .jumbotron {
 	height: 8rem;
 }
-<<<<<<< HEAD
-=======
-.image {
+<<<<<<< HEAD ======= .image {
 	width: 500px;
 	height: 420px;
 	opacity: 0.7;
 	border-radius: 5rem 0rem 0rem 5rem;
 }
->>>>>>> aeefa84e421be2b1b57ef08cecbbd5b1d523ecb4
-
-.form-group1 {
+>>>>>>>aeefa84e421be2b1b57ef08cecbbd5b1d523ecb4 .form-group1 {
 	width: 500px;
 	margin: 0 auto;
 	padding: 1em;
