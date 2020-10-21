@@ -33,13 +33,13 @@ body {
 .jumbotron {
 	height: 8rem;
 }
-<<<<<<< HEAD ======= .image {
+.image {
 	width: 500px;
 	height: 420px;
 	opacity: 0.7;
 	border-radius: 5rem 0rem 0rem 5rem;
 }
->>>>>>>aeefa84e421be2b1b57ef08cecbbd5b1d523ecb4 .form-group1 {
+.form-group1 {
 	width: 500px;
 	margin: 0 auto;
 	padding: 1em;
